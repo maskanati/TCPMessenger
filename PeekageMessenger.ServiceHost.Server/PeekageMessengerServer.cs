@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -37,6 +38,8 @@ namespace PeekageMessenger.ServiceHost.Server
         {
             do
             {
+                _notification.Warning($"test id", tcpClient.GetId().ToString());
+
                 var message = await tcpClient.ReadMessageAsync();
                 if (message == null)
                     break;
@@ -52,5 +55,18 @@ namespace PeekageMessenger.ServiceHost.Server
             _notification.Error($"Client", "One client dropped out");
 
         }
+
     }
+        public static class MyExtensions
+        {
+            //this dictionary should use weak key references
+            static Dictionary<object, int> d = new Dictionary<object, int>();
+            static int gid = 0;
+
+            public static int GetId(this object o)
+            {
+                if (d.ContainsKey(o)) return d[o];
+                return d[o] = gid++;
+            }
+        }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using PeekageMessenger.Application;
@@ -34,15 +36,9 @@ namespace PeekageMessenger.Application
         private async Task<IResponseMessage> SendAndGetResponse(IRequestMessage requestMessage)
         {
             await _tcpClient.WriteMessageAsync(requestMessage.Message);
-            try
-            {
-             var age = await _tcpClient.ReadMessageAsync();
-
-            }
-            catch (Exception exception)
-            {
-            }
+            
             var message = await _tcpClient.ReadMessageAsync();
+            
             if (message == null)
                 throw new ClientIsNotConecteException();
             var _notification = new ConsoleNotification();
