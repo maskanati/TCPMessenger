@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PeekageMessenger.Domain.Contract\PeekageMessenger.Domain.Contract.csproj" />
+    <ProjectReference Include="..\PeekageMessenger.Framework.Core\PeekageMessenger.Framework.Core.csproj" />
+    <ProjectReference Include="..\PeekageMessenger.Framework\PeekageMessenger.Framework.csproj" />
+  </ItemGroup>
+
+</Project>

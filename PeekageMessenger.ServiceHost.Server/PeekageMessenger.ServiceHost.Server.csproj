@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PeekageMessenger.Application\PeekageMessenger.Application.csproj" />
+    <ProjectReference Include="..\PeekageMessenger.Framework\PeekageMessenger.Framework.csproj" />
+    <ProjectReference Include="..\PeekageMessenger.Tools.Notification\PeekageMessenger.Tools.Notification.csproj" />
+  </ItemGroup>
+
+</Project>
