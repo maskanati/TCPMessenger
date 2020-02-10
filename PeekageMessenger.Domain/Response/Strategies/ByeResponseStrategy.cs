@@ -1,5 +1,5 @@
 ﻿using System.Net.Sockets;
-using System.Threading.Tasks;
+
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
 
@@ -16,9 +16,9 @@ namespace PeekageMessenger.Domain.Response.Strategies
             this._tcpClient = tcpClient;
         }
 
-        public async Task Reply()
+        public void  Reply()
         {
-            await _tcpClient.WriteMessageAsync(this.Message);
+             _tcpClient.WriteMessage(this.Message);
             _tcpClient.Client.Close();
             _tcpClient.Close();
             _tcpClient = null;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
-using System.Threading.Tasks;
+
 using PeekageMessenger.Application;
 using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
@@ -21,23 +21,23 @@ namespace PeekageMessenger.Application
         {
             _tcpClient = tcpClient;
         }
-        public async Task<IResponseMessage> SendAsync(IRequestMessage requestMessage)
+        public  IResponseMessage Send(IRequestMessage requestMessage)
         {
-            return await SendAndGetResponse(requestMessage); 
+            return  SendAndGetResponse(requestMessage); 
 
         }
 
-        public async Task<TResponseMessage> SendAsync<TResponseMessage>(IRequestMessage requestMessage) where TResponseMessage : IResponseMessage
+        public  TResponseMessage Send<TResponseMessage>(IRequestMessage requestMessage) where TResponseMessage : IResponseMessage
         {
-            var response = await SendAndGetResponse(requestMessage);
+            var response =  SendAndGetResponse(requestMessage);
             return (TResponseMessage)response;
         }
 
-        private async Task<IResponseMessage> SendAndGetResponse(IRequestMessage requestMessage)
+        private  IResponseMessage SendAndGetResponse(IRequestMessage requestMessage)
         {
-            await _tcpClient.WriteMessageAsync(requestMessage.Message);
+             _tcpClient.WriteMessage(requestMessage.Message);
             
-            var message = await _tcpClient.ReadMessageAsync();
+            var message =  _tcpClient.ReadMessage();
             
             if (message == null)
                 throw new ClientIsNotConecteException();

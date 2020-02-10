@@ -2,29 +2,28 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PeekageMessenger.Framework
 {
     public static class TcpClientExtensions
     {
-        public static async Task<string> ReadMessageAsync(this TcpClient tcpClient)
+        public static  string ReadMessage(this TcpClient tcpClient)
         {
             if (!tcpClient.Connected)
                 return null;
 
             var networkStream = tcpClient.GetStream();
             var reader = new StreamReader(networkStream);
-            return await reader.ReadLineAsync();
+            return  reader.ReadLine();
         }
-        public static async Task<bool> WriteMessageAsync(this TcpClient tcpClient, string message)
+        public static  bool WriteMessage(this TcpClient tcpClient, string message)
         {
             if (!tcpClient.Connected)
                 return false;
             NetworkStream networkStream = tcpClient.GetStream();
             var writer = new StreamWriter(networkStream);
             writer.AutoFlush = true;
-            await writer.WriteLineAsync(message);
+             writer.WriteLine(message);
             return true;
         }
 

@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+
 using PeekageMessenger.Application;
 using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
@@ -36,7 +36,7 @@ namespace PeekageMessenger.ServiceHost.Client
                 Console.Read(); // read next key, but discard
             }
         }
-        public async Task Run()
+        public  void Run()
         {
             _notification.Notify("Peekage", "Please enter a command...");
 
@@ -46,37 +46,43 @@ namespace PeekageMessenger.ServiceHost.Client
                 clearInputBuffer();
                 var strategy = new RequestFactory(_tcpClient).Create(message);
 
-                new Thread(async () =>
-                {
-                    try
-                    {
-                        NotifyRequest(strategy,message);
-                        var response = await strategy.Send();
-                        _notification.Success("Server Replied", response.Message);
-                    }
-                    catch (ClientIsNotConecteException exception)
-                    {
-                        _notification.Error("Disconnect", exception.ToString());
-                    }
-                    catch (IOException exception)
-                    {
-                        _notification.Error("Disconnect", new ClientIsNotConecteException().ToString());
-                    }
-                    catch (InvalidRequestException exception)
-                    {
-                        _notification.Error("Not Allowed", exception.ToString());
-                    }
-                    catch (Exception exception)
-                    {
-                        HandelException(exception);
-                    }
-                    
-                }).Start();
+                Thread readerThread = new Thread(HandleMessage);
+                readerThread.Name = "Client " + Guid.NewGuid().ToString();
+                readerThread.Start(new MyClass(){Request = strategy,Message = message});
+
+
             } while (true);
 
 
         }
 
+        private void HandleMessage(object obj)
+        {
+            MyClass x = (MyClass)obj;
+
+            try
+            {
+                NotifyRequest(x.Request, x.Message);
+                var response = x.Request.Send();
+                _notification.Success("Server Replied", response.Message);
+            }
+            catch (ClientIsNotConecteException exception)
+            {
+                _notification.Error("Disconnect", exception.ToString());
+            }
+            catch (IOException exception)
+            {
+                _notification.Error("Disconnect", new ClientIsNotConecteException().ToString());
+            }
+            catch (InvalidRequestException exception)
+            {
+                _notification.Error("Not Allowed", exception.ToString());
+            }
+            catch (Exception exception)
+            {
+                HandelException(exception);
+            }
+        }
         private void HandelException(Exception exception)
         {
             if (exception is BusinessException)
@@ -92,5 +98,11 @@ namespace PeekageMessenger.ServiceHost.Client
             else
                 _notification.Info("Client is trying to say", message);
         }
+    }
+
+    public class MyClass
+    {
+        public  IRequestMessage Request { get; set; }
+        public  string Message { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
+
 using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.Contract.Responses;
@@ -17,7 +17,7 @@ namespace PeekageMessenger.Domain.RequestStrategies
         }
         public string Message => "Invalid";
 
-        public async Task<IResponseMessage> Send() { 
+        public  IResponseMessage Send() { 
             throw new InvalidRequestException();
         }
 

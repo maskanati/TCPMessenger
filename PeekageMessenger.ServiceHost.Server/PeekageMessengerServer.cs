@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
+
 using PeekageMessenger.Application;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Tools.Notification;
@@ -20,34 +20,34 @@ namespace PeekageMessenger.ServiceHost.Server
             _notification=new ConsoleNotification();
             _tcpListener = new TcpListener(IPAddress.Parse(ipAddress), port);
         }
-        public async Task Run()
+        public void  Run()
         {
             _tcpListener.Start();
             _notification.Info($"Peekage", "Server started!");
             _notification.Warning($"Server", "Waiting for a connection...");
             do
             {
-                var tcpClient = await _tcpListener.AcceptTcpClientAsync();
+                var tcpClient =  _tcpListener.AcceptTcpClient();
                 _notification.Success($"Server", "A client connected!");
 
-            new Thread(async () => { await ReplyToClientRequests(tcpClient); }).Start();
+            new Thread( () => {  ReplyToClientRequests(tcpClient); }).Start();
             } while (true);
         }
 
-        private async Task ReplyToClientRequests(TcpClient tcpClient)
+        private  void ReplyToClientRequests(TcpClient tcpClient)
         {
             do
             {
                 _notification.Warning($"test id", tcpClient.GetId().ToString());
 
-                var message = await tcpClient.ReadMessageAsync();
+                var message =  tcpClient.ReadMessage();
                 if (message == null)
                     break;
-                new Thread(async () =>
+                new Thread( () =>
                 {
                     _notification.Info($"Client said", message);
                     var strategy = new ResponseFactory(tcpClient).GetStrategy(message);
-                    await strategy.Reply();
+                     strategy.Reply();
                     _notification.Success("Server Replied", strategy.Message);
                 }).Start();
               

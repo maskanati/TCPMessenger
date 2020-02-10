@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿
 using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.Contract.Responses;
@@ -17,9 +17,9 @@ namespace PeekageMessenger.Domain.RequestStrategies
 
         public string Message => "Hello";
 
-        public async Task<IResponseMessage> Send()
+        public  IResponseMessage Send()
         {
-           return await _client.SendAsync<HiResponseMessage>(this);
+           return  _client.Send<HiResponseMessage>(this);
         }
 
     }
