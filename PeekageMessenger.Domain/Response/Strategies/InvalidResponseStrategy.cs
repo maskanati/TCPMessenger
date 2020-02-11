@@ -1,24 +1,25 @@
-﻿using System.Net.Sockets;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
+using PeekageMessenger.Framework.Core.Logic;
 
 namespace PeekageMessenger.Domain.Response.Strategies
 {
     public class InvalidResponseStrategy : IResponseStrategy
     {
+
+        private IResponseSender _responseSender { set; get; }
+        public void SetResponseSender(IResponseSender responseSender)
+        {
+            _responseSender = responseSender;
+        }
         public string Message => "Invalid";
-        private TcpClient _tcpClient;
 
-        public InvalidResponseStrategy(TcpClient tcpClient)
+        public async Task<ReplyResult> Reply()
         {
-            this._tcpClient = tcpClient;
+            await _responseSender.SendAsync(this.Message);
+            return ReplyResult.StillConnected;
         }
-
-        public async Task Reply()
-        {
-            await _tcpClient.WriteMessageAsync(this.Message);
-        }
-
     }
 }

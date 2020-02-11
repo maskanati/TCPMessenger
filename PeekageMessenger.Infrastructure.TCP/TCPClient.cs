@@ -9,15 +9,14 @@ using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Framework.Core.Exceptions;
-using PeekageMessenger.Tools.Notification;
 
-namespace PeekageMessenger.Application
+namespace PeekageMessenger.Infrastructure.TCP
 {
-    public class Client : IClient
+    public class TCPClient : IClient
     {
         private readonly TcpClient _tcpClient;
 
-        public Client(TcpClient tcpClient)
+        public TCPClient(TcpClient tcpClient)
         {
             _tcpClient = tcpClient;
         }
@@ -41,10 +40,8 @@ namespace PeekageMessenger.Application
             
             if (message == null)
                 throw new ClientIsNotConnectException();
-            var _notification = new ConsoleNotification();
-            _notification.Warning("test",message);
 
-            var response = new ResponseFactory(_tcpClient).Create(message);
+            var response = new ResponseMessageFactory().Create(message);
             return response;
         }
     }

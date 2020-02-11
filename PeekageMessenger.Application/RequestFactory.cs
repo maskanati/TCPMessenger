@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using PeekageMessenger.Application.Contract;
 using PeekageMessenger.Domain.Contract;
@@ -11,27 +12,31 @@ namespace PeekageMessenger.Application
     public class RequestFactory: IRequestFactory
     {
         private readonly IClient _client;
+        private static Dictionary<string, IRequestMessage> _strategyDictionary = new Dictionary<string, IRequestMessage>();
 
-        public RequestFactory(TcpClient tcpClient)
+        public RequestFactory(IClient client)
         {
-            _client = new Client(tcpClient);
+            _client = client;
+            StrategyInitializer();
+        }
+        private void StrategyInitializer()
+        {
+            if (_strategyDictionary.Count > 0)
+                return;
+
+            _strategyDictionary.Add("Hello", new HelloRequestStrategy());
+            _strategyDictionary.Add("Bye", new ByeRequestStrategy());
+            _strategyDictionary.Add("Ping", new PingRequestStrategy());
         }
         public IRequestMessage Create(string message)
         {
+            IRequestMessage strategy = new InvalidRequestStrategy();
+            _strategyDictionary.TryGetValue(message, out strategy);
 
-            switch (message)
-            {
-                case "Hello":
-                    return new HelloRequestStrategy(_client);
-                case "Bye":
-                    return new ByeRequestStrategy(_client);
-                case "Ping":
-                    return new PingRequestStrategy(_client);
-                default:
-                    return new InvalidRequestStrategy(_client);
-            }
+            strategy.SetClient(_client);
+
+            return strategy;
+
         }
-
-  
     }
 }

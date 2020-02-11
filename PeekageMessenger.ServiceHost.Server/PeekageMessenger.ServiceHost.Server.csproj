@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PeekageMessenger.Application\PeekageMessenger.Application.csproj" />
     <ProjectReference Include="..\PeekageMessenger.Framework\PeekageMessenger.Framework.csproj" />
+    <ProjectReference Include="..\PeekageMessenger.Infrastructure.TCP\PeekageMessenger.Infrastructure.TCP.csproj" />
     <ProjectReference Include="..\PeekageMessenger.Tools.Notification\PeekageMessenger.Tools.Notification.csproj" />
   </ItemGroup>
 

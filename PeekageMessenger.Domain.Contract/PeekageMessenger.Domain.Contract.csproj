@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PeekageMessenger.Framework.Core\PeekageMessenger.Framework.Core.csproj" />
+  </ItemGroup>
+
 </Project>

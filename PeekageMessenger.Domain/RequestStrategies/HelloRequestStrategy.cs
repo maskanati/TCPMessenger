@@ -10,7 +10,7 @@ namespace PeekageMessenger.Domain.RequestStrategies
     {
         private IClient _client;
 
-        public HelloRequestStrategy(IClient client)
+        public void SetClient(IClient client)
         {
             _client = client;
         }

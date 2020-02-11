@@ -11,7 +11,7 @@ namespace PeekageMessenger.Domain.RequestStrategies
     {
         private IClient _client;
 
-        public InvalidRequestStrategy(IClient client)
+        public void SetClient(IClient client)
         {
             _client = client;
         }

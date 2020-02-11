@@ -12,6 +12,7 @@ using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Domain.RequestStrategies;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Framework.Core.Exceptions;
+using PeekageMessenger.Infrastructure.TCP;
 using PeekageMessenger.Tools.Notification;
 
 namespace PeekageMessenger.ServiceHost.Client
@@ -25,26 +26,29 @@ namespace PeekageMessenger.ServiceHost.Client
         public PeekageMessengerClient(string ipAddress, int port)
         {
             _notification = new ConsoleNotification();
-            _tcpClient = new TcpClient(ipAddress, port);
+            try
+            {
+                _tcpClient = new TcpClient(ipAddress, port);
+            }
+            catch
+            {
+                _notification.Error("Client", "Server is not available...");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
             _notification.Success("Client", "Successfully connected to server");
 
         }
-        private void clearInputBuffer()
-        {
-            while (Console.KeyAvailable)
-            {
-                Console.Read(); // read next key, but discard
-            }
-        }
-        public async Task Run()
+
+        public void Run()
         {
             _notification.Notify("Peekage", "Please enter a command...");
 
             do
             {
                 var message = Console.ReadLine();
-                clearInputBuffer();
-                var strategy = new RequestFactory(_tcpClient).Create(message);
+                TCPClient client = new TCPClient(_tcpClient);
+                var strategy = new RequestFactory(client).Create(message);
 
                 new Thread(async () =>
                 {
@@ -87,9 +91,7 @@ namespace PeekageMessenger.ServiceHost.Client
 
         private void NotifyRequest(IRequestMessage request, string message)
         {
-            if (request is InvalidRequestStrategy)
-                throw new InvalidRequestException();
-            else
+            if (!(request is InvalidRequestStrategy))
                 _notification.Info("Client is trying to say", message);
         }
     }

@@ -13,10 +13,6 @@ namespace PeekageMessenger.ServiceHost.Server
 
         static async Task Main(string[] args)
         {
-
-
-
-
             Console.Title = "PeekageMessenger -=Server=-";
             PeekageMessengerServer server = new PeekageMessengerServer(SERVER_IP, PORT_NO);
             await server.Run();

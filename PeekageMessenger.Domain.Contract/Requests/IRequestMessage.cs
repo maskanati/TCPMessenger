@@ -8,6 +8,7 @@ namespace PeekageMessenger.Domain.Contract.Requests
     {
         string Message { get; }
         Task<IResponseMessage> Send();
+        void SetClient(IClient client);
     }
 }
 

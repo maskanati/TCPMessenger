@@ -1,23 +1,24 @@
-﻿using System.Net.Sockets;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
+using PeekageMessenger.Framework.Core.Logic;
 
 namespace PeekageMessenger.Domain.Response.Strategies
 {
     public class PongResponseStrategy: IResponseStrategy
     {
-        public string Message => "Pong";
-        private TcpClient _tcpClient;
-
-        public PongResponseStrategy(TcpClient tcpClient)
+        private IResponseSender _responseSender { set; get; }
+        public void SetResponseSender(IResponseSender responseSender)
         {
-            this._tcpClient = tcpClient;
+            _responseSender = responseSender;
         }
-
-        public async Task Reply()
+        public string Message => "Pong";
+        
+        public async Task<ReplyResult> Reply()
         {
-            await _tcpClient.WriteMessageAsync(this.Message);
+            await _responseSender.SendAsync(this.Message);
+            return ReplyResult.StillConnected;
         }
 
     }

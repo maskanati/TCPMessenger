@@ -1,28 +1,26 @@
-﻿using System.Net.Sockets;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
+using PeekageMessenger.Framework.Core.Logic;
 
 namespace PeekageMessenger.Domain.Response.Strategies
 {
     public class ByeResponseStrategy : IResponseStrategy
     {
+
+        private IResponseSender _responseSender { set; get; }
+        public void SetResponseSender(IResponseSender responseSender)
+        {
+            _responseSender = responseSender;
+        }
         public string Message => "Bye";
 
-        private TcpClient _tcpClient;
-
-        public ByeResponseStrategy(TcpClient tcpClient)
+        public async Task<ReplyResult> Reply()
         {
-            this._tcpClient = tcpClient;
+            await _responseSender.SendAsync(this.Message);
+            _responseSender.Close();
+            return ReplyResult.Disconnected;
         }
-
-        public async Task Reply()
-        {
-            await _tcpClient.WriteMessageAsync(this.Message);
-            _tcpClient.Client.Close();
-            _tcpClient.Close();
-            _tcpClient = null;
-        }
-     
     }
 }

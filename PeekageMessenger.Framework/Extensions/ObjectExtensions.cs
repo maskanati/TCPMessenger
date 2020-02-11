@@ -10,14 +10,14 @@ namespace PeekageMessenger.Framework
     public static class ObjectExtensions
     {
         static Dictionary<object, int> dictionary = new Dictionary<object, int>();
-        static int gid = 0;
+        static int objectId = 0;
 
-        public static int GetId(this object o)
+        public static int GetId(this object obj)
         {
-            if (dictionary.ContainsKey(o))
-                return dictionary[o];
+            if (dictionary.ContainsKey(obj))
+                return dictionary[obj];
 
-            return dictionary[o] = ++gid;
+            return dictionary[obj] = ++objectId;
         }
     }
 }

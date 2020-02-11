@@ -29,6 +29,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.Framework"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.Framework.Core", "PeekageMessenger.Framework.Core\PeekageMessenger.Framework.Core.csproj", "{668B4CED-ABB8-4778-ABBB-BA5DB442554F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{BD70A972-E14F-4DC8-8BEB-D01B993E23B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeekageMessenger.Infrastructure.TCP", "PeekageMessenger.Infrastructure.TCP\PeekageMessenger.Infrastructure.TCP.csproj", "{AB60CE61-6936-4D55-A74F-8284F458DD5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,10 @@ Global
 		{668B4CED-ABB8-4778-ABBB-BA5DB442554F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{668B4CED-ABB8-4778-ABBB-BA5DB442554F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{668B4CED-ABB8-4778-ABBB-BA5DB442554F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB60CE61-6936-4D55-A74F-8284F458DD5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB60CE61-6936-4D55-A74F-8284F458DD5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB60CE61-6936-4D55-A74F-8284F458DD5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB60CE61-6936-4D55-A74F-8284F458DD5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +91,7 @@ Global
 		{40875365-1177-45E2-B985-50D6BDACC462} = {1DDE1DE4-73FA-4470-B318-A779F86BF606}
 		{117EAE15-2402-4D07-A456-18E75C8D6076} = {4D96B3B9-7011-47E8-A06F-DD6EF72CE003}
 		{668B4CED-ABB8-4778-ABBB-BA5DB442554F} = {4D96B3B9-7011-47E8-A06F-DD6EF72CE003}
+		{AB60CE61-6936-4D55-A74F-8284F458DD5C} = {BD70A972-E14F-4DC8-8BEB-D01B993E23B7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D761E7A7-CEBB-49D9-9E9A-379B321414C4}

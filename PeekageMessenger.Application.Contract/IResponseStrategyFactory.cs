@@ -2,9 +2,9 @@
 
 namespace PeekageMessenger.Application.Contract
 {
-    public interface IResponseFactory
+    public interface IResponseStrategyFactory
     {
-        IResponseMessage Create(string body);
+        IResponseStrategy Create(string message);
 
     }
 }

@@ -10,7 +10,7 @@ namespace PeekageMessenger.Domain.RequestStrategies
     {
         private IClient _client;
 
-        public PingRequestStrategy(IClient client)
+        public void SetClient(IClient client)
         {
             _client = client;
         }

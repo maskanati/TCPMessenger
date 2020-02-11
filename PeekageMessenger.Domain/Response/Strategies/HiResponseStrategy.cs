@@ -1,25 +1,28 @@
 ﻿using System;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
+using PeekageMessenger.Framework.Core.Logic;
 
 namespace PeekageMessenger.Domain.Response.Strategies
 {
     public class HiResponseStrategy : IResponseStrategy
     {
+
+        private IResponseSender _responseSender { set; get; }
+        public void SetResponseSender(IResponseSender responseSender)
+        {
+            _responseSender = responseSender;
+        }
         public string Message => "Hi";
 
-        private TcpClient _tcpClient;
-        public HiResponseStrategy(TcpClient tcpClient)
-        {
-            this._tcpClient = tcpClient;
-        }
-        public async Task Reply()
+        public async Task<ReplyResult> Reply()
         {
             Thread.Sleep(TimeSpan.FromSeconds(1));
-            await _tcpClient.WriteMessageAsync(this.Message);
+            await _responseSender.SendAsync(this.Message);
+            return ReplyResult.StillConnected;
         }
     }
 }
