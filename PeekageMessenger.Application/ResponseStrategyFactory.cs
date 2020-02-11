@@ -35,8 +35,10 @@ namespace PeekageMessenger.Application
 
         public IResponseStrategy Create(string requestMessage)
         {
-            IResponseStrategy strategy= new InvalidResponseStrategy();
-            _strategyDictionary.TryGetValue(requestMessage, out strategy);
+            var result = _strategyDictionary.TryGetValue(requestMessage, out var strategy);
+            
+            if (!result)
+                strategy = new InvalidResponseStrategy();
 
             strategy.SetResponseSender(_responseSender);
 

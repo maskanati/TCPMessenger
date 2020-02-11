@@ -30,8 +30,9 @@ namespace PeekageMessenger.Application
         }
         public IRequestMessage Create(string message)
         {
-            IRequestMessage strategy = new InvalidRequestStrategy();
-            _strategyDictionary.TryGetValue(message, out strategy);
+            var result =_strategyDictionary.TryGetValue(message, out var strategy);
+            if(!result)
+                strategy = new InvalidRequestStrategy();
 
             strategy.SetClient(_client);
 

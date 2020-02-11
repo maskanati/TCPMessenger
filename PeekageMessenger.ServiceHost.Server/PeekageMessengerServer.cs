@@ -47,7 +47,14 @@ namespace PeekageMessenger.ServiceHost.Server
             ReplyResult connectionState = ReplyResult.StillConnected;
             do
             {
-                string message = await tcpClient.ReadMessageAsync();
+                string message = string.Empty;
+
+                try { message = await tcpClient.ReadMessageAsync();}
+                catch (IOException exception)
+                {
+                    //When the connected clients console window closing without 'Bye' command
+                    break;
+                }
 
                 new Thread(async () =>
                 {
