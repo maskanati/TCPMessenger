@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ClientIsNotConecte" xml:space="preserve">
-    <value>Client is not conecte to 'Server'</value>
+  <data name="ClientIsNotConnect" xml:space="preserve">
+    <value>Client is not connect to 'Server'</value>
   </data>
   <data name="InvalidRequest" xml:space="preserve">
     <value>Request has not a valid 'Message'</value>

@@ -23,8 +23,9 @@ namespace PeekageMessenger.Framework
                 return false;
             NetworkStream networkStream = tcpClient.GetStream();
             var writer = new StreamWriter(networkStream);
-            writer.AutoFlush = true;
             await writer.WriteLineAsync(message);
+            writer.Flush();
+
             return true;
         }
 

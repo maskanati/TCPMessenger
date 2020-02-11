@@ -24,13 +24,13 @@ namespace PeekageMessenger.ServiceHost.Server
         {
             _tcpListener.Start();
             _notification.Info($"Peekage", "Server started!");
-            _notification.Warning($"Server", "Waiting for a connection...");
+            _notification.Notify($"Server", "Waiting for a connection...");
             do
             {
-                var tcpClient = await _tcpListener.AcceptTcpClientAsync();
-                _notification.Success($"Server", "A client connected!");
+                var tcpClient = await _tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
+                _notification.Warning($"Server", $"Client{tcpClient.GetId()} connected!");
 
-            new Thread(async () => { await ReplyToClientRequests(tcpClient); }).Start();
+                new Thread(async () => { await ReplyToClientRequests(tcpClient); }).Start();
             } while (true);
         }
 
@@ -38,35 +38,22 @@ namespace PeekageMessenger.ServiceHost.Server
         {
             do
             {
-                _notification.Warning($"test id", tcpClient.GetId().ToString());
-
                 var message = await tcpClient.ReadMessageAsync();
                 if (message == null)
                     break;
                 new Thread(async () =>
                 {
-                    _notification.Info($"Client said", message);
+                    _notification.Info($"Client {tcpClient.GetId()} said", message);
                     var strategy = new ResponseFactory(tcpClient).GetStrategy(message);
                     await strategy.Reply();
                     _notification.Success("Server Replied", strategy.Message);
                 }).Start();
               
             } while (true);
-            _notification.Error($"Client", "One client dropped out");
+            _notification.Error($"Server", "Client{tcpClient.GetId()} dropped out");
 
         }
 
     }
-        public static class MyExtensions
-        {
-            //this dictionary should use weak key references
-            static Dictionary<object, int> d = new Dictionary<object, int>();
-            static int gid = 0;
-
-            public static int GetId(this object o)
-            {
-                if (d.ContainsKey(o)) return d[o];
-                return d[o] = gid++;
-            }
-        }
+    
 }

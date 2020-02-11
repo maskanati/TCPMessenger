@@ -54,13 +54,13 @@ namespace PeekageMessenger.ServiceHost.Client
                         var response = await strategy.Send();
                         _notification.Success("Server Replied", response.Message);
                     }
-                    catch (ClientIsNotConecteException exception)
+                    catch (ClientIsNotConnectException exception)
                     {
                         _notification.Error("Disconnect", exception.ToString());
                     }
                     catch (IOException exception)
                     {
-                        _notification.Error("Disconnect", new ClientIsNotConecteException().ToString());
+                        _notification.Error("Disconnect", new ClientIsNotConnectException().ToString());
                     }
                     catch (InvalidRequestException exception)
                     {

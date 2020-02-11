@@ -3,6 +3,6 @@
     public enum PeekageMessengerExceptions
     {
         InvalidRequestException=5001,
-        ClientIsNotConecteException = 5002
+        ClientIsNotConnectException = 5002
     }
 }

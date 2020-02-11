@@ -62,11 +62,11 @@ namespace PeekageMessenger.Framework.Core.Exceptions.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Client is not conecte to &apos;Server&apos;.
+        ///   Looks up a localized string similar to Client is not connect to &apos;Server&apos;.
         /// </summary>
-        internal static string ClientIsNotConecte {
+        internal static string ClientIsNotConnect {
             get {
-                return ResourceManager.GetString("ClientIsNotConecte", resourceCulture);
+                return ResourceManager.GetString("ClientIsNotConnect", resourceCulture);
             }
         }
         

@@ -40,7 +40,7 @@ namespace PeekageMessenger.Application
             var message = await _tcpClient.ReadMessageAsync();
             
             if (message == null)
-                throw new ClientIsNotConecteException();
+                throw new ClientIsNotConnectException();
             var _notification = new ConsoleNotification();
             _notification.Warning("test",message);
 
