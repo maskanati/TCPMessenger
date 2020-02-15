@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "PeekageMessenger.HostedService.Server": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

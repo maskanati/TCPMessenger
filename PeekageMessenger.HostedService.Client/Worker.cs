@@ -1,60 +1,52 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using PeekageMessenger.Application;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using PeekageMessenger.Application.Contract;
 using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
-using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Domain.RequestStrategies;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Framework.Core.Exceptions;
 using PeekageMessenger.Infrastructure.TCP;
 using PeekageMessenger.Tools.Notification;
 
-namespace PeekageMessenger.ServiceHost.Client
+namespace PeekageMessenger.HostedService.Client
 {
-    public class PeekageMessengerClient
+    public class Worker : BackgroundService
     {
-        private readonly TcpClient _tcpClient;
         private readonly INotification _notification;
-        
+        private readonly IRequestFactory _requestFactory;
+        private readonly IClient _client;
 
-        public PeekageMessengerClient(string ipAddress, int port)
+        public Worker(INotification notification, IClient client, IRequestFactory requestFactory)
         {
-            _notification = new ConsoleNotification();
-            try
-            {
-                _tcpClient = new TcpClient(ipAddress, port);
-            }
-            catch
-            {
-                _notification.Error("ClientImp", "Server is not available...");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
-            _notification.Success("ClientImp", "Successfully connected to server");
-
+            _notification = notification;
+            _client = client;
+            _requestFactory = requestFactory;
         }
 
-        public void Run()
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _notification.Info("Peekage", "Welcome To PeekageMessenger!");
+            _notification.Warning("Note", "This messenger actually treats messages in a case-sensitive manner!");
+            _notification.Warning("Valid messages", "'Hello', 'Bye', 'Ping'");
             _notification.Notify("Peekage", "Please enter a command...");
 
             do
             {
                 var message = Console.ReadLine();
-                Infrastructure.TCP.ClientImp clientImp = new Infrastructure.TCP.ClientImp(_tcpClient);
-                var strategy = new RequestFactory().Create(clientImp,message);
+                var strategy = _requestFactory.Create(_client, message);
 
                 new Thread(async () =>
                 {
                     try
                     {
-                        NotifyRequest(strategy,message);
+                        NotifyRequest(strategy, message);
                         var response = await strategy.Send();
                         _notification.Success("Server Replied", response.Message);
                     }
@@ -74,10 +66,9 @@ namespace PeekageMessenger.ServiceHost.Client
                     {
                         HandelException(exception);
                     }
-                    
+
                 }).Start();
             } while (true);
-
 
         }
 

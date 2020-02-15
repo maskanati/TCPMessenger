@@ -19,10 +19,6 @@ namespace PeekageMessenger.Infrastructure.TCP
 
         private void MessageInitializer()
         {
-
-            if (_messageDictionary.Count > 0)
-                return;
-
             _messageDictionary.Add("Hi", new HiResponseMessage());
             _messageDictionary.Add("Bye", new ByeResponseMessage());
             _messageDictionary.Add("Pong", new PongResponseMessage());

@@ -11,36 +11,29 @@ namespace PeekageMessenger.Application
 {
     public class ResponseStrategyFactory: IResponseStrategyFactory
     {
-        private IResponseSender _responseSender;
-
         private static Dictionary<string, IResponseStrategy> _strategyDictionary = new Dictionary<string, IResponseStrategy>();
 
-        public ResponseStrategyFactory(IResponseSender responseSender)
+        public ResponseStrategyFactory()
         {
-            _responseSender = responseSender;
-
             StrategyInitializer();
         }
 
         private void StrategyInitializer()
         {
-            if(_strategyDictionary.Count>0)
-                return;
-
             _strategyDictionary.Add("Hello", new HiResponseStrategy());
             _strategyDictionary.Add("Bye", new ByeResponseStrategy());
             _strategyDictionary.Add("Ping", new PongResponseStrategy());
         }
         
 
-        public IResponseStrategy Create(string requestMessage)
+        public IResponseStrategy Create(IResponseSender responseSender, string requestMessage)
         {
             var result = _strategyDictionary.TryGetValue(requestMessage, out var strategy);
             
             if (!result)
                 strategy = new InvalidResponseStrategy();
 
-            strategy.SetResponseSender(_responseSender);
+            strategy.SetResponseSender(responseSender);
 
             return strategy;
 

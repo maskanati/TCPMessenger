@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using PeekageMessenger.Application;
+using PeekageMessenger.Application.Contract;
 using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.Contract.Responses;
@@ -12,13 +13,15 @@ using PeekageMessenger.Framework.Core.Exceptions;
 
 namespace PeekageMessenger.Infrastructure.TCP
 {
-    public class TCPClient : IClient
+    public class ClientImp : IClient
     {
         private readonly TcpClient _tcpClient;
+        private readonly IResponseMessageFactory _responseMessageFactory;
 
-        public TCPClient(TcpClient tcpClient)
+        public ClientImp(TcpClient tcpClient, IResponseMessageFactory responseMessageFactory)
         {
             _tcpClient = tcpClient;
+            _responseMessageFactory = responseMessageFactory;
         }
         public async Task<IResponseMessage> SendAsync(IRequestMessage requestMessage)
         {
@@ -41,7 +44,7 @@ namespace PeekageMessenger.Infrastructure.TCP
             if (message == null)
                 throw new ClientIsNotConnectException();
 
-            var response = new ResponseMessageFactory().Create(message);
+            var response = _responseMessageFactory.Create(message);
             return response;
         }
     }

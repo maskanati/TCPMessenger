@@ -1,9 +1,10 @@
-﻿using PeekageMessenger.Domain.Contract.Requests;
+﻿using PeekageMessenger.Domain.Contract;
+using PeekageMessenger.Domain.Contract.Requests;
 
 namespace PeekageMessenger.Application.Contract
 {
     public interface IRequestFactory
     {
-        IRequestMessage Create(string message);
+        IRequestMessage Create(IClient client, string message);
     }
 }

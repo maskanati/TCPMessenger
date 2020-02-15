@@ -1,39 +1,44 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using PeekageMessenger.Application;
+using PeekageMessenger.Application.Contract;
 using PeekageMessenger.Framework;
-using PeekageMessenger.Framework.Core;
 using PeekageMessenger.Framework.Core.Logic;
 using PeekageMessenger.Infrastructure.TCP;
 using PeekageMessenger.Tools.Notification;
 
-namespace PeekageMessenger.ServiceHost.Server
+namespace PeekageMessenger.HostedService.Server
 {
-    public class PeekageMessengerServer
+    public class Worker : BackgroundService
     {
-        private readonly TcpListener _tcpListener;
         private readonly INotification _notification;
+        private TcpListener _tcpListener;
 
-        public PeekageMessengerServer(string ipAddress, int port)
+        private readonly IListenerFactory _listenerFactory;
+        private readonly IResponseStrategyFactory _responseStrategyFactory;
+        public Worker(INotification notification, IResponseStrategyFactory responseStrategyFactory)
         {
-            _notification = new ConsoleNotification();
-            _tcpListener = new TcpListener(IPAddress.Parse(ipAddress), port);
+            _notification = notification;
+            _responseStrategyFactory = responseStrategyFactory;
         }
 
-        public async Task Run()
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _tcpListener = TcpFactory.CreateListener();
             _tcpListener.Start();
             _notification.Info("Peekage", "Server started!");
             _notification.Notify("Server", "Waiting for a connection...");
 
             await AcceptNewClient();
         }
+
 
         private async Task AcceptNewClient()
         {
@@ -48,9 +53,9 @@ namespace PeekageMessenger.ServiceHost.Server
         private async Task HandleClient(TcpClient tcpClient)
         {
             var clientId = tcpClient.GetId();
-            
+
             var responseSender = new ResponseSender(tcpClient);
-            
+
             await HandelNewMessage(tcpClient, responseSender);
 
             _notification.Error("Server", $"ClientImp{clientId} dropped out");
@@ -70,7 +75,7 @@ namespace PeekageMessenger.ServiceHost.Server
 
         private async Task<ReplyResult> ReplyToMessage(ResponseSender responseSender, string message)
         {
-            var strategy = new ResponseStrategyFactory().Create(responseSender,message);
+            var strategy = _responseStrategyFactory.Create(responseSender, message);
             var connectionState = await strategy.Reply();
             _notification.Success("Server Replied", strategy.Message);
             return connectionState;
@@ -78,16 +83,15 @@ namespace PeekageMessenger.ServiceHost.Server
 
         private async Task<string> GetNewMessage(TcpClient tcpClient)
         {
-            try { 
+            try
+            {
                 return await (Task.Run(() => tcpClient.ReadMessageAsync()));
             }
-            catch(IOException ex)
+            catch (IOException ex)
             {
                 //When the connected clients console window closing with/without 'Bye' command
             }
             return null;
         }
-
     }
-
 }
