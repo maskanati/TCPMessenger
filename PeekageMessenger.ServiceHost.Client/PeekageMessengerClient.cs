@@ -47,7 +47,7 @@ namespace PeekageMessenger.ServiceHost.Client
             do
             {
                 var message = Console.ReadLine();
-                Infrastructure.TCP.ClientImp clientImp = new Infrastructure.TCP.ClientImp(_tcpClient);
+                ClientImp clientImp = new ClientImp(_tcpClient);
                 var strategy = new RequestFactory().Create(clientImp,message);
 
                 new Thread(async () =>

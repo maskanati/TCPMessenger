@@ -37,39 +37,46 @@ namespace PeekageMessenger.HostedService.Client
             _notification.Warning("Valid messages", "'Hello', 'Bye', 'Ping'");
             _notification.Notify("Peekage", "Please enter a command...");
 
-            do
+            AcceptNewMessage();
+        }
+
+        private void AcceptNewMessage()
+        {
+            string message = Console.ReadLine();
+            var strategy = _requestFactory.Create(_client, message);
+            _ = Task.Run(async () => await HandleMessage(strategy, message));
+            AcceptNewMessage();
+        }
+
+        private async Task HandleMessage(IRequestMessage strategy, string message)
+        {
+            try
             {
-                var message = Console.ReadLine();
-                var strategy = _requestFactory.Create(_client, message);
+                await ResponseToRequest(strategy, message);
+            }
+            catch (ClientIsNotConnectException exception)
+            {
+                _notification.Error("Disconnect", exception.ToString());
+            }
+            catch (IOException exception)
+            {
+                _notification.Error("Disconnect", new ClientIsNotConnectException().ToString());
+            }
+            catch (InvalidRequestException exception)
+            {
+                _notification.Error("Not Allowed", exception.ToString());
+            }
+            catch (Exception exception)
+            {
+                HandelException(exception);
+            }
+        }
 
-                new Thread(async () =>
-                {
-                    try
-                    {
-                        NotifyRequest(strategy, message);
-                        var response = await strategy.Send();
-                        _notification.Success("Server Replied", response.Message);
-                    }
-                    catch (ClientIsNotConnectException exception)
-                    {
-                        _notification.Error("Disconnect", exception.ToString());
-                    }
-                    catch (IOException exception)
-                    {
-                        _notification.Error("Disconnect", new ClientIsNotConnectException().ToString());
-                    }
-                    catch (InvalidRequestException exception)
-                    {
-                        _notification.Error("Not Allowed", exception.ToString());
-                    }
-                    catch (Exception exception)
-                    {
-                        HandelException(exception);
-                    }
-
-                }).Start();
-            } while (true);
-
+        private async Task ResponseToRequest(IRequestMessage strategy, string message)
+        {
+            NotifyRequest(strategy, message);
+            var response = await strategy.Send();
+            _notification.Success("Server Replied", response.Message);
         }
 
         private void HandelException(Exception exception)
