@@ -6,7 +6,7 @@ namespace PeekageMessenger.Domain.Contract
 {
     public interface IResponseSender
     {
-        Task SendAsync(string message);
+        Task SendAsync(Message message);
         void Close();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
@@ -15,9 +16,10 @@ namespace PeekageMessenger.Domain.Response.Strategies
         }
         public string Message => "Pong";
         
-        public async Task<ReplyResult> Reply()
+        public async Task<ReplyResult> Reply(Guid messageId)
         {
-            await _responseSender.SendAsync(this.Message);
+            var message = new Message(messageId, this.Message);
+            await _responseSender.SendAsync(message);
             return ReplyResult.StillConnected;
         }
 

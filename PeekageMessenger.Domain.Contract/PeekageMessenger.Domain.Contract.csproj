@@ -8,4 +8,10 @@
     <ProjectReference Include="..\PeekageMessenger.Framework.Core\PeekageMessenger.Framework.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.TestPlatform.CommunicationUtilities">
+      <HintPath>C:\Users\s.maskanati\.nuget\packages\microsoft.testplatform.testhost\16.2.0\lib\netstandard1.5\Microsoft.TestPlatform.CommunicationUtilities.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

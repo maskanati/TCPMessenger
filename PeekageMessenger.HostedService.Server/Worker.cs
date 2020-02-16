@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PeekageMessenger.Application;
 using PeekageMessenger.Application.Contract;
+using PeekageMessenger.Domain;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Framework.Core.Logic;
 using PeekageMessenger.Framework.Extensions;
@@ -74,17 +75,19 @@ namespace PeekageMessenger.HostedService.Server
 
             if (message == null) return;
 
-            _notification.Info($"Client {tcpClient.GetId()} said", message);
+            var messageData= MessageFactory.Create(message);
 
-            _ = Task.Run(() => ReplyToMessage(responseSender, message));
+            _notification.Info($"Client {tcpClient.GetId()} said", messageData.Text);
+
+            _ = Task.Run(() => ReplyToMessage(responseSender, messageData));
 
             await HandelNewMessage(tcpClient, responseSender);
         }
 
-        private async Task<ReplyResult> ReplyToMessage(ResponseSender responseSender, string message)
+        private async Task<ReplyResult> ReplyToMessage(ResponseSender responseSender, Message message)
         {
-            var strategy = _responseStrategyFactory.Create(responseSender, message);
-            var connectionState = await strategy.Reply();
+            var strategy = _responseStrategyFactory.Create(responseSender, message.Text);
+            var connectionState = await strategy.Reply(message.MessageId);
             _notification.Success("Server Replied", strategy.Message);
             return connectionState;
         }

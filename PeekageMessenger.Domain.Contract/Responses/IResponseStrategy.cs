@@ -1,4 +1,5 @@
-﻿using PeekageMessenger.Framework.Core.Logic;
+﻿using System;
+using PeekageMessenger.Framework.Core.Logic;
 using System.Threading.Tasks;
 
 namespace PeekageMessenger.Domain.Contract.Responses
@@ -7,6 +8,6 @@ namespace PeekageMessenger.Domain.Contract.Responses
     {
         void SetResponseSender(IResponseSender responseSender);
         string Message { get; }
-        Task<ReplyResult> Reply();
+        Task<ReplyResult> Reply(Guid messageId);
     }
 }

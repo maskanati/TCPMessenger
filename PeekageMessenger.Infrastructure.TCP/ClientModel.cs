@@ -27,7 +27,20 @@ namespace PeekageMessenger.Infrastructure.TCP
             _tcpClient = tcpClient;
             _responseMessageFactory = responseMessageFactory;
             _messageDictionary = new Dictionary<Guid, IResponseMessage>();
+
+            Task.Run(async () => await ReadNewResponse());
+
         }
+
+        private async Task ReadNewResponse()
+        {
+            var responseMessage = await _tcpClient.ReadMessageAsync();
+            var response= MessageFactory.Create(responseMessage);
+
+            await ReadNewResponse();
+
+        }
+
         public async Task<IResponseMessage> SendAsync(IRequestMessage requestMessage)
         {
             return await SendAndGetResponse(requestMessage); 
@@ -45,73 +58,75 @@ namespace PeekageMessenger.Infrastructure.TCP
             var message = new Message(Guid.NewGuid(), requestMessage.Message);
 
             await _tcpClient.WriteMessageAsync(message.ToString());
-           
+
             //wait
 
-            var responseMessage = await _tcpClient.ReadMessageAsync();
-            
+            var responseMessage = "";// subs
+
+
             if (responseMessage == null)
                 throw new ClientIsNotConnectException();
 
             var response = _responseMessageFactory.Create(responseMessage);
             return response;
         }
+
     }
 
 
-    public class Bus
-    {
+    //public class Bus
+    //{
 
-        private IList<IMessageSender> _senders;
-        private IList<Response> _responses;
-        private readonly TcpClient _tcpClient;
+    //    private IList<IMessageSender> _senders;
+    //    private IList<Response> _responses;
+    //    private readonly TcpClient _tcpClient;
 
-        public Bus(TcpClient tcpClient)
-        {
-            _tcpClient = tcpClient;
-        }
+    //    public Bus(TcpClient tcpClient)
+    //    {
+    //        _tcpClient = tcpClient;
+    //    }
 
-        public void Register(IMessageSender messageSender)
-        {
-            this._senders.Add(messageSender);
-        }
+    //    public void Register(IMessageSender messageSender)
+    //    {
+    //        this._senders.Add(messageSender);
+    //    }
 
-        public async Task Send(IMessageSender messageSender)
-        {
+    //    public async Task Send(IMessageSender messageSender)
+    //    {
 
-            Register(messageSender);
-            var message = new Message(messageSender.Id, messageSender.Message);
-            await _tcpClient.WriteMessageAsync(message.ToString());
+    //        Register(messageSender);
+    //        var message = new Message(messageSender.Id, messageSender.Message);
+    //        await _tcpClient.WriteMessageAsync(message.ToString());
 
-            await ListenToResponses();
+    //        await ListenToResponses();
            
-            //            foreach (var messageSender in _senders)
-            //            {
-            //                var message = new Message(messageSender.Id, messageSender.Message);
-            //                await _tcpClient.WriteMessageAsync(message.ToString());
-            //
-            //            }
+    //        //            foreach (var messageSender in _senders)
+    //        //            {
+    //        //                var message = new Message(messageSender.Id, messageSender.Message);
+    //        //                await _tcpClient.WriteMessageAsync(message.ToString());
+    //        //
+    //        //            }
 
 
-        }
+    //    }
 
-        private async Task ListenToResponses()
-        {
-            var responseMessage = await _tcpClient.ReadMessageAsync();
+    //    private async Task ListenToResponses()
+    //    {
+    //        var responseMessage = await _tcpClient.ReadMessageAsync();
 
-        }
-    }
+    //    }
+    //}
 
-    public class Response
-    {
-        Guid Id { get; set; }
-        string Message { get; set; }
-    }
+    //public class Response
+    //{
+    //    Guid Id { get; set; }
+    //    string Message { get; set; }
+    //}
 
-    public interface IMessageSender
-    {
-        Guid Id { get; set; }
-        string Message { get; set; }
-        eve
-    }
+    //public interface IMessageSender
+    //{
+    //    Guid Id { get; set; }
+    //    string Message { get; set; }
+    //    eve
+    //}
 }

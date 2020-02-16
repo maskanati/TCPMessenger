@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using PeekageMessenger.Application;
+using PeekageMessenger.Domain;
 using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.Contract.Responses;
@@ -37,9 +38,9 @@ namespace PeekageMessenger.Infrastructure.TCP
             Connected = false;
         }
 
-        public async Task SendAsync(string message)
+        public async Task SendAsync(Message message)
         {
-            await _streamWriter.WriteLineAsync(message);
+            await _streamWriter.WriteLineAsync(message.ToString());
             _streamWriter.Flush();
         }
         public bool Connected;

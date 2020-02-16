@@ -18,10 +18,11 @@ namespace PeekageMessenger.Domain.Response.Strategies
         }
         public string Message => "Hi";
 
-        public async Task<ReplyResult> Reply()
+        public async Task<ReplyResult> Reply(Guid messageId)
         {
             Thread.Sleep(TimeSpan.FromSeconds(1));
-            await _responseSender.SendAsync(this.Message);
+            var message = new Message(messageId, this.Message);
+            await _responseSender.SendAsync(message);
             return ReplyResult.StillConnected;
         }
     }
