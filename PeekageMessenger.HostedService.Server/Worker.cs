@@ -11,6 +11,7 @@ using PeekageMessenger.Application;
 using PeekageMessenger.Application.Contract;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Framework.Core.Logic;
+using PeekageMessenger.Framework.Extensions;
 using PeekageMessenger.Infrastructure.TCP;
 using PeekageMessenger.Tools.Notification;
 
@@ -42,31 +43,38 @@ namespace PeekageMessenger.HostedService.Server
 
         private async Task AcceptNewClient()
         {
-            var tcpClient = await _tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
-            _notification.Warning("Server", $"ClientImp{tcpClient.GetId()} connected!");
+            _tcpListener.BeginAcceptTcpClient(HandleNewClient, _tcpListener);
+        }
+
+        private void HandleNewClient(IAsyncResult asyncResult)
+        {
+            TcpListener listener = (TcpListener)asyncResult.AsyncState;
+
+            TcpClient tcpClient = listener.EndAcceptTcpClient(asyncResult);
 
             _ = Task.Run(async () => await HandleClient(tcpClient));
-
-            await AcceptNewClient();
         }
 
         private async Task HandleClient(TcpClient tcpClient)
         {
             var clientId = tcpClient.GetId();
 
+            _notification.Warning("Server", $"Client{clientId} connected!");
+
             var responseSender = new ResponseSender(tcpClient);
 
             await HandelNewMessage(tcpClient, responseSender);
 
-            _notification.Error("Server", $"ClientImp{clientId} dropped out");
+            _notification.Error("Server", $"Client{clientId} dropped out");
         }
 
         private async Task HandelNewMessage(TcpClient tcpClient, ResponseSender responseSender)
         {
             string message = await GetNewMessage(tcpClient);
+
             if (message == null) return;
 
-            _notification.Info($"ClientImp {tcpClient.GetId()} said", message);
+            _notification.Info($"Client {tcpClient.GetId()} said", message);
 
             _ = Task.Run(() => ReplyToMessage(responseSender, message));
 

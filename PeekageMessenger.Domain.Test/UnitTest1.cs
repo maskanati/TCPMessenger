@@ -17,7 +17,7 @@ namespace PeekageMessenger.Domain.Test
         {
             var tcpClient = FakeTcpClientFactory.Create();
 
-            var client = new ClientImp(new TcpClient(),new ResponseMessageFactory() );
+            var client = new ClientModel(new TcpClient(),new ResponseMessageFactory() );
             var result=await client.SendAsync(new HelloRequestStrategy());
             Assert.Equal("Hi",result.Message);
         }

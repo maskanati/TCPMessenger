@@ -90,7 +90,7 @@ namespace PeekageMessenger.HostedService.Client
         private void NotifyRequest(IRequestMessage request, string message)
         {
             if (!(request is InvalidRequestStrategy))
-                _notification.Info("ClientImp is trying to say", message);
+                _notification.Info("Client is trying to say", message);
         }
     }
 }

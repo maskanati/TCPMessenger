@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using System.Timers;
 
-namespace PeekageMessenger.Framework.Core
+namespace PeekageMessenger.Framework.Core.FluentProgramming
 {
     //This class is just for more readability in main classes :D
     public class FluentHelper

@@ -18,7 +18,7 @@ namespace PeekageMessenger.HostedService.Client
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-            Console.Title = "PeekageMessenger -=ClientImp=-";
+            Console.Title = "PeekageMessenger -=Client=-";
 
 
         }
@@ -30,7 +30,7 @@ namespace PeekageMessenger.HostedService.Client
                     services.AddHostedService<Worker>();
                     services.AddSingleton<INotification, ConsoleNotification>();
                     services.AddSingleton(TcpFactory.CreateClient());
-                    services.AddSingleton<IClient, ClientImp>();
+                    services.AddSingleton<IClient, ClientModel>();
                     services.AddSingleton<IRequestFactory, RequestFactory>();
                     services.AddSingleton<IResponseMessageFactory, ResponseMessageFactory>();
                 });

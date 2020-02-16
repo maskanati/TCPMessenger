@@ -32,11 +32,11 @@ namespace PeekageMessenger.ServiceHost.Client
             }
             catch
             {
-                _notification.Error("ClientImp", "Server is not available...");
+                _notification.Error("Client", "Server is not available...");
                 Console.ReadKey();
                 Environment.Exit(0);
             }
-            _notification.Success("ClientImp", "Successfully connected to server");
+            _notification.Success("Client", "Successfully connected to server");
 
         }
 
@@ -47,8 +47,8 @@ namespace PeekageMessenger.ServiceHost.Client
             do
             {
                 var message = Console.ReadLine();
-                ClientImp clientImp = new ClientImp(_tcpClient);
-                var strategy = new RequestFactory().Create(clientImp,message);
+                ClientModel client = new ClientModel(_tcpClient);
+                var strategy = new RequestFactory().Create(client,message);
 
                 new Thread(async () =>
                 {
@@ -92,7 +92,7 @@ namespace PeekageMessenger.ServiceHost.Client
         private void NotifyRequest(IRequestMessage request, string message)
         {
             if (!(request is InvalidRequestStrategy))
-                _notification.Info("ClientImp is trying to say", message);
+                _notification.Info("Client is trying to say", message);
         }
     }
 }

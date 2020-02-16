@@ -12,7 +12,7 @@ namespace PeekageMessenger.ServiceHost.Client
         const string SERVER_IP = "127.0.0.1";
         static void Main(string[] args)
         {
-            Console.Title = "PeekageMessenger -=ClientImp=-";
+            Console.Title = "PeekageMessenger -=Client=-";
 
             INotification notification = new ConsoleNotification();
             notification.Info("Peekage","Welcome To PeekageMessenger!");

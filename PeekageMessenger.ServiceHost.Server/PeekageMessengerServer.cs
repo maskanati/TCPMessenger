@@ -10,6 +10,7 @@ using PeekageMessenger.Application;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Framework.Core;
 using PeekageMessenger.Framework.Core.Logic;
+using PeekageMessenger.Framework.Extensions;
 using PeekageMessenger.Infrastructure.TCP;
 using PeekageMessenger.Tools.Notification;
 
@@ -38,7 +39,7 @@ namespace PeekageMessenger.ServiceHost.Server
         private async Task AcceptNewClient()
         {
             var tcpClient = await _tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
-            _notification.Warning("Server", $"ClientImp{tcpClient.GetId()} connected!");
+            _notification.Warning("Server", $"Client{tcpClient.GetId()} connected!");
 
             _ = Task.Run(async () => await HandleClient(tcpClient));
 
@@ -53,7 +54,7 @@ namespace PeekageMessenger.ServiceHost.Server
             
             await HandelNewMessage(tcpClient, responseSender);
 
-            _notification.Error("Server", $"ClientImp{clientId} dropped out");
+            _notification.Error("Server", $"Client{clientId} dropped out");
         }
 
         private async Task HandelNewMessage(TcpClient tcpClient, ResponseSender responseSender)
@@ -61,7 +62,7 @@ namespace PeekageMessenger.ServiceHost.Server
             string message = await GetNewMessage(tcpClient);
             if (message == null) return;
 
-            _notification.Info($"ClientImp {tcpClient.GetId()} said", message);
+            _notification.Info($"Client {tcpClient.GetId()} said", message);
 
             _ = Task.Run(() => ReplyToMessage(responseSender, message));
 
