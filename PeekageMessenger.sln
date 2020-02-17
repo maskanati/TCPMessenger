@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.ServiceHost.Client", "PeekageMessenger.ServiceHost.Client\PeekageMessenger.ServiceHost.Client.csproj", "{F98D67E5-78CE-4876-B7E0-2FE0BF60B9E7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.ServiceHost.Server", "PeekageMessenger.ServiceHost.Server\PeekageMessenger.ServiceHost.Server.csproj", "{58635023-7814-43BE-8E87-8A9BDEA67036}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.Domain", "PeekageMessenger.Domain\PeekageMessenger.Domain.csproj", "{5AB41D64-0B8E-4D09-91F7-158BBDAD5F80}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.Domain.Contract", "PeekageMessenger.Domain.Contract\PeekageMessenger.Domain.Contract.csproj", "{14D70CFB-0C81-46B8-9CC2-02FA9CC103A0}"
@@ -33,13 +29,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.Infrastructure.TCP", "PeekageMessenger.Infrastructure.TCP\PeekageMessenger.Infrastructure.TCP.csproj", "{AB60CE61-6936-4D55-A74F-8284F458DD5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeekageMessenger.HostedService.Server", "PeekageMessenger.HostedService.Server\PeekageMessenger.HostedService.Server.csproj", "{8A13483F-345C-4826-A0BD-2E7041AB6F04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.HostedService.Server", "PeekageMessenger.HostedService.Server\PeekageMessenger.HostedService.Server.csproj", "{8A13483F-345C-4826-A0BD-2E7041AB6F04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeekageMessenger.HostedService.Client", "PeekageMessenger.HostedService.Client\PeekageMessenger.HostedService.Client.csproj", "{89CF5D8A-5FC9-4123-9CFA-424472AE6DC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.HostedService.Client", "PeekageMessenger.HostedService.Client\PeekageMessenger.HostedService.Client.csproj", "{89CF5D8A-5FC9-4123-9CFA-424472AE6DC1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{F8C7684D-7A4F-49F3-97B1-5571A189E192}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeekageMessenger.Domain.Test", "PeekageMessenger.Domain.Test\PeekageMessenger.Domain.Test.csproj", "{DBBEC3F7-A3D3-4F5B-86ED-E7B538840229}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeekageMessenger.Domain.Test", "PeekageMessenger.Domain.Test\PeekageMessenger.Domain.Test.csproj", "{DBBEC3F7-A3D3-4F5B-86ED-E7B538840229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,14 +43,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F98D67E5-78CE-4876-B7E0-2FE0BF60B9E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F98D67E5-78CE-4876-B7E0-2FE0BF60B9E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F98D67E5-78CE-4876-B7E0-2FE0BF60B9E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F98D67E5-78CE-4876-B7E0-2FE0BF60B9E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58635023-7814-43BE-8E87-8A9BDEA67036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58635023-7814-43BE-8E87-8A9BDEA67036}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58635023-7814-43BE-8E87-8A9BDEA67036}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58635023-7814-43BE-8E87-8A9BDEA67036}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5AB41D64-0B8E-4D09-91F7-158BBDAD5F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5AB41D64-0B8E-4D09-91F7-158BBDAD5F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AB41D64-0B8E-4D09-91F7-158BBDAD5F80}.Release|Any CPU.ActiveCfg = Release|Any CPU

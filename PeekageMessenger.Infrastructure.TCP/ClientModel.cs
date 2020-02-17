@@ -12,6 +12,7 @@ using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Framework.Core.Exceptions;
+using PeekageMessenger.Framework.Core.FluentProgramming;
 using PeekageMessenger.Framework.Extensions;
 
 namespace PeekageMessenger.Infrastructure.TCP
@@ -20,13 +21,13 @@ namespace PeekageMessenger.Infrastructure.TCP
     {
         private readonly TcpClient _tcpClient;
         private readonly IResponseMessageFactory _responseMessageFactory;
-        Dictionary<Guid,IResponseMessage> _messageDictionary;
+        Dictionary<Guid, string> _messageDictionary;
 
         public ClientModel(TcpClient tcpClient, IResponseMessageFactory responseMessageFactory)
         {
             _tcpClient = tcpClient;
             _responseMessageFactory = responseMessageFactory;
-            _messageDictionary = new Dictionary<Guid, IResponseMessage>();
+            _messageDictionary = new Dictionary<Guid, string>();
 
             Task.Run(async () => await ReadNewResponse());
 
@@ -36,32 +37,36 @@ namespace PeekageMessenger.Infrastructure.TCP
         {
             var responseMessage = await _tcpClient.ReadMessageAsync();
             var response= MessageFactory.Create(responseMessage);
+            _messageDictionary[response.MessageId] = response.Text;
 
             await ReadNewResponse();
+
 
         }
 
         public async Task<IResponseMessage> SendAsync(IRequestMessage requestMessage)
         {
-            return await SendAndGetResponse(requestMessage); 
+            return await Send(requestMessage); 
 
         }
 
         public async Task<TResponseMessage> SendAsync<TResponseMessage>(IRequestMessage requestMessage) where TResponseMessage : IResponseMessage
         {
-            var response = await SendAndGetResponse(requestMessage);
+            var response = await Send(requestMessage);
             return (TResponseMessage)response;
         }
 
-        private async Task<IResponseMessage> SendAndGetResponse(IRequestMessage requestMessage)
+        //This method violates Single Responsibility Principle but its a limitation in code challenge
+        private async Task<IResponseMessage> Send(IRequestMessage requestMessage)
         {
             var message = new Message(Guid.NewGuid(), requestMessage.Message);
 
             await _tcpClient.WriteMessageAsync(message.ToString());
+            _messageDictionary.Add(message.MessageId,null);
 
-            //wait
+            string responseMessage = null;
 
-            var responseMessage = "";// subs
+            responseMessage =await Task.Run(()=>GetResponseMessage(responseMessage, message));
 
 
             if (responseMessage == null)
@@ -71,62 +76,18 @@ namespace PeekageMessenger.Infrastructure.TCP
             return response;
         }
 
+        private string GetResponseMessage(string responseMessage, Message message)
+        {
+            while (responseMessage == null)
+            {
+                FluentHelper.WaitFor(100).Milliseconds();
+                responseMessage = _messageDictionary[message.MessageId];
+            }
+
+            _messageDictionary.Remove(message.MessageId);
+
+            return responseMessage;
+        }
     }
 
-
-    //public class Bus
-    //{
-
-    //    private IList<IMessageSender> _senders;
-    //    private IList<Response> _responses;
-    //    private readonly TcpClient _tcpClient;
-
-    //    public Bus(TcpClient tcpClient)
-    //    {
-    //        _tcpClient = tcpClient;
-    //    }
-
-    //    public void Register(IMessageSender messageSender)
-    //    {
-    //        this._senders.Add(messageSender);
-    //    }
-
-    //    public async Task Send(IMessageSender messageSender)
-    //    {
-
-    //        Register(messageSender);
-    //        var message = new Message(messageSender.Id, messageSender.Message);
-    //        await _tcpClient.WriteMessageAsync(message.ToString());
-
-    //        await ListenToResponses();
-           
-    //        //            foreach (var messageSender in _senders)
-    //        //            {
-    //        //                var message = new Message(messageSender.Id, messageSender.Message);
-    //        //                await _tcpClient.WriteMessageAsync(message.ToString());
-    //        //
-    //        //            }
-
-
-    //    }
-
-    //    private async Task ListenToResponses()
-    //    {
-    //        var responseMessage = await _tcpClient.ReadMessageAsync();
-
-    //    }
-    //}
-
-    //public class Response
-    //{
-    //    Guid Id { get; set; }
-    //    string Message { get; set; }
-    //}
-
-    //public interface IMessageSender
-    //{
-    //    Guid Id { get; set; }
-    //    string Message { get; set; }
-    //    eve
-    //}
 }

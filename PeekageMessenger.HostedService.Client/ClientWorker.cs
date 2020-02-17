@@ -17,13 +17,13 @@ using PeekageMessenger.Tools.Notification;
 
 namespace PeekageMessenger.HostedService.Client
 {
-    public class Worker : BackgroundService
+    public class ClientWorker : BackgroundService
     {
         private readonly INotification _notification;
         private readonly IRequestFactory _requestFactory;
         private readonly IClient _client;
 
-        public Worker(INotification notification, IClient client, IRequestFactory requestFactory)
+        public ClientWorker(INotification notification, IClient client, IRequestFactory requestFactory)
         {
             _notification = notification;
             _client = client;
@@ -83,6 +83,7 @@ namespace PeekageMessenger.HostedService.Client
         {
             if (exception is BusinessException)
                 _notification.Error("Exception", exception.ToString());
+            else if (exception is KeyNotFoundException){}
             else
                 _notification.Error("Exception", exception.Message);
         }

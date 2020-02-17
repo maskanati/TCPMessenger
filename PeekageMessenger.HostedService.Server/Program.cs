@@ -15,15 +15,15 @@ namespace PeekageMessenger.HostedService.Server
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
             Console.Title = "PeekageMessenger -=Server=-";
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<Worker>();
+                    services.AddHostedService<ServerWorker>();
                     services.AddSingleton<INotification, ConsoleNotification>();
                     services.AddSingleton<IResponseStrategyFactory, ResponseStrategyFactory>();
                 });

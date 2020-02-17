@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace PeekageMessenger.Domain
+namespace PeekageMessenger.Domain.Contract
 {
     public class Message
     {

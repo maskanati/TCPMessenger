@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using PeekageMessenger.Application;
 using PeekageMessenger.Application.Contract;
 using PeekageMessenger.Domain;
+using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Framework;
 using PeekageMessenger.Framework.Core.Logic;
 using PeekageMessenger.Framework.Extensions;
@@ -18,14 +19,14 @@ using PeekageMessenger.Tools.Notification;
 
 namespace PeekageMessenger.HostedService.Server
 {
-    public class Worker : BackgroundService
+    public class ServerWorker : BackgroundService
     {
         private readonly INotification _notification;
         private TcpListener _tcpListener;
 
         private readonly IListenerFactory _listenerFactory;
         private readonly IResponseStrategyFactory _responseStrategyFactory;
-        public Worker(INotification notification, IResponseStrategyFactory responseStrategyFactory)
+        public ServerWorker(INotification notification, IResponseStrategyFactory responseStrategyFactory)
         {
             _notification = notification;
             _responseStrategyFactory = responseStrategyFactory;
@@ -36,7 +37,7 @@ namespace PeekageMessenger.HostedService.Server
             _tcpListener = TcpFactory.CreateListener();
             _tcpListener.Start();
             _notification.Info("Peekage", "Server started!");
-            _notification.Notify("Server", "Waiting for a connection...");
+            _notification.Info("Server", "Waiting for a connection...");
 
             await AcceptNewClient();
         }

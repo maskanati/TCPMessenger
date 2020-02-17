@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using PeekageMessenger.Domain;
 using PeekageMessenger.Domain.Contract;
-using PeekageMessenger.Domain.Contract.Requests;
-using PeekageMessenger.Domain.RequestStrategies;
-using IRequestMessage = PeekageMessenger.Domain.Contract.Requests.IRequestMessage;
 
-namespace PeekageMessenger.Application
+namespace PeekageMessenger.Domain
 {
     public static class MessageFactory
     {
