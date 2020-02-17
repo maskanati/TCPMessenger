@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PeekageMessenger.Application;
 using PeekageMessenger.Application.Contract;
+using PeekageMessenger.Framework.Core;
 using PeekageMessenger.Infrastructure.TCP;
 using PeekageMessenger.Tools.Notification;
 
@@ -26,6 +27,8 @@ namespace PeekageMessenger.HostedService.Server
                     services.AddHostedService<ServerWorker>();
                     services.AddSingleton<INotification, ConsoleNotification>();
                     services.AddSingleton<IResponseStrategyFactory, ResponseStrategyFactory>();
+                    services.AddSingleton(TcpFactory.CreateListener());
+                    services.AddSingleton<IConnectionListener, AppTcpListener>();
                 });
     }
 }

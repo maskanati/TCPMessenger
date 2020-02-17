@@ -12,19 +12,22 @@ using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
+using PeekageMessenger.Framework.Core;
 using PeekageMessenger.Framework.Core.Exceptions;
+using PeekageMessenger.Framework.Core.Extensions;
 using PeekageMessenger.Framework.Core.FluentProgramming;
-using PeekageMessenger.Framework.Extensions;
+
+
 
 namespace PeekageMessenger.Infrastructure.TCP
 {
     public class ClientModel : IClient
     {
-        private readonly TcpClient _tcpClient;
+        private readonly IConnectionClient _tcpClient;
         private readonly IResponseMessageFactory _responseMessageFactory;
         ConcurrentDictionary<Guid, string> _messageDictionary;
 
-        public ClientModel(TcpClient tcpClient, IResponseMessageFactory responseMessageFactory)
+        public ClientModel(IConnectionClient tcpClient, IResponseMessageFactory responseMessageFactory)
         {
             _tcpClient = tcpClient;
             _responseMessageFactory = responseMessageFactory;

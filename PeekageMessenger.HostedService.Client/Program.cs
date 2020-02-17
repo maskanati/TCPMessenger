@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using PeekageMessenger.Application;
 using PeekageMessenger.Application.Contract;
 using PeekageMessenger.Domain.Contract;
+using PeekageMessenger.Framework.Core;
 using PeekageMessenger.Infrastructure.TCP;
 using PeekageMessenger.Tools.Notification;
 
@@ -28,6 +29,7 @@ namespace PeekageMessenger.HostedService.Client
                     services.AddHostedService<ClientWorker>();
                     services.AddSingleton<INotification, ConsoleNotification>();
                     services.AddSingleton(TcpFactory.CreateClient());
+                    services.AddSingleton<IConnectionClient, AppTcpClient>();
                     services.AddSingleton<IClient, ClientModel>();
                     services.AddSingleton<IRequestFactory, RequestFactory>();
                     services.AddSingleton<IResponseMessageFactory, ResponseMessageFactory>();

@@ -1,12 +1,11 @@
 ﻿using System.IO;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace PeekageMessenger.Framework.Extensions
+namespace PeekageMessenger.Framework.Core.Extensions
 {
     public static class TcpClientExtensions
     {
-        public static async Task<string> ReadMessageAsync(this TcpClient tcpClient)
+        public static async Task<string> ReadMessageAsync(this IConnectionClient tcpClient)
         {
             if (!tcpClient.Connected)
                 return null;
@@ -15,11 +14,11 @@ namespace PeekageMessenger.Framework.Extensions
             var reader = new StreamReader(networkStream);
             return await reader.ReadLineAsync();
         }
-        public static async Task<bool> WriteMessageAsync(this TcpClient tcpClient, string message)
+        public static async Task<bool> WriteMessageAsync(this IConnectionClient tcpClient, string message)
         {
             if (!tcpClient.Connected)
                 return false;
-            NetworkStream networkStream = tcpClient.GetStream();
+            var networkStream = tcpClient.GetStream();
             var writer = new StreamWriter(networkStream);
             await writer.WriteLineAsync(message);
             writer.Flush();

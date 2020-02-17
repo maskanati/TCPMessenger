@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PeekageMessenger.Framework.Extensions
+namespace PeekageMessenger.Framework.Core.Extensions
 {
     public static class ObjectExtensions
     {

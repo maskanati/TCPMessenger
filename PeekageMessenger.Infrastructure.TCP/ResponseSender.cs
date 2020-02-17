@@ -10,23 +10,24 @@ using PeekageMessenger.Domain.Contract;
 using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.Contract.Responses;
 using PeekageMessenger.Framework;
+using PeekageMessenger.Framework.Core;
 using PeekageMessenger.Framework.Core.Exceptions;
 
 namespace PeekageMessenger.Infrastructure.TCP
 {
     public class ResponseSender : IResponseSender
     {
-        private readonly TcpClient _tcpClient;
+        private readonly IConnectionClient _tcpClient;
         private readonly StreamWriter _streamWriter;
         private readonly StreamReader _streamReader;
 
-        public ResponseSender(TcpClient tcpClient)
+        public ResponseSender(IConnectionClient tcpClient)
         {
             _tcpClient = tcpClient;
             if (!tcpClient.Connected)
                 throw new ClientIsNotConnectException();
             Connected = true;
-            NetworkStream networkStream = tcpClient.GetStream();
+            var networkStream = tcpClient.GetStream();
             _streamWriter = new StreamWriter(networkStream, Encoding.ASCII);
             _streamReader = new StreamReader(networkStream, Encoding.ASCII);
         }
