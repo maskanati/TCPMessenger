@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -21,13 +22,13 @@ namespace PeekageMessenger.Infrastructure.TCP
     {
         private readonly TcpClient _tcpClient;
         private readonly IResponseMessageFactory _responseMessageFactory;
-        Dictionary<Guid, string> _messageDictionary;
+        ConcurrentDictionary<Guid, string> _messageDictionary;
 
         public ClientModel(TcpClient tcpClient, IResponseMessageFactory responseMessageFactory)
         {
             _tcpClient = tcpClient;
             _responseMessageFactory = responseMessageFactory;
-            _messageDictionary = new Dictionary<Guid, string>();
+            _messageDictionary = new ConcurrentDictionary<Guid, string>();
 
             Task.Run(async () => await ReadNewResponse());
 
@@ -62,7 +63,7 @@ namespace PeekageMessenger.Infrastructure.TCP
             var message = new Message(Guid.NewGuid(), requestMessage.Message);
 
             await _tcpClient.WriteMessageAsync(message.ToString());
-            _messageDictionary.Add(message.MessageId,null);
+            _messageDictionary.TryAdd(message.MessageId,null);
 
             string responseMessage = null;
 
@@ -81,10 +82,9 @@ namespace PeekageMessenger.Infrastructure.TCP
             while (responseMessage == null)
             {
                 FluentHelper.WaitFor(100).Milliseconds();
-                responseMessage = _messageDictionary[message.MessageId];
+                _messageDictionary.TryRemove(message.MessageId, out responseMessage);
             }
 
-            _messageDictionary.Remove(message.MessageId);
 
             return responseMessage;
         }
