@@ -4,14 +4,20 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using NSubstitute;
 using NSubstitute.Extensions;
+using PeekageMessenger.Application;
+using PeekageMessenger.Application.Contract;
+using PeekageMessenger.Domain.Contract;
+using PeekageMessenger.Domain.Contract.Requests;
 using PeekageMessenger.Domain.RequestStrategies;
 using PeekageMessenger.Framework;
+using PeekageMessenger.Framework.Core;
 using PeekageMessenger.Framework.Core.Extensions;
 using PeekageMessenger.Infrastructure.TCP;
 using Xunit;
 
 namespace PeekageMessenger.Domain.Test
 {
+
     public class HelloMessageTests
     {
         [Fact]
@@ -19,19 +25,25 @@ namespace PeekageMessenger.Domain.Test
         {
             var tcpClient = FakeTcpClientFactory.Create();
 
-            Substitute.For<AppTcpClient>().ReadMessageAsync().Returns("Hi");
 
-            var client = new ClientModel(new AppTcpClient(null), new ResponseMessageFactory());
-            var result = await client.SendAsync(new HelloRequestStrategy());
-            Assert.Equal("Hi", result.Message);
+            var client = new ClientModel(tcpClient, new ResponseMessageFactory());
+            var request=new RequestFactory().Create(client, "Hello");
+
+            var taskRequest = Task.Run( () => client.SendAsync(request).Result);
+             tcpClient.ReadMessageAsync();
+             var result= taskRequest.Result.Message;
+
+             Assert.Equal("Hi", result);
         }
     }
 
     public class FakeTcpClientFactory
     {
-        public static AppTcpClient Create()
+        public static IConnectionClient Create()
         {
-            return new AppTcpClient(null);
+            var _appClient = Substitute.For<IConnectionClient>();
+            _appClient.ReadMessageAsync().Returns(Task.FromResult("Hi"));
+            return _appClient;
         }
     }
 }

@@ -26,7 +26,10 @@ namespace PeekageMessenger.Infrastructure.TCP
     {
         private readonly TcpClient _tcpClient;
 
-
+        public AppTcpClient()
+        {
+            
+        }
         public AppTcpClient(TcpClient tcpClient)
         {
             _tcpClient = tcpClient;
@@ -44,6 +47,26 @@ namespace PeekageMessenger.Infrastructure.TCP
             _tcpClient.GetStream();
         }
 
+        public async Task<string> ReadMessageAsync()
+        {
+            if (!_tcpClient.Connected)
+                return null;
+
+            var networkStream = _tcpClient.GetStream();
+            var reader = new StreamReader(networkStream);
+            return await reader.ReadLineAsync();
+        }
+        public async Task<bool> WriteMessageAsync(string message)
+        {
+            if (!_tcpClient.Connected)
+                return false;
+            var networkStream = _tcpClient.GetStream();
+            var writer = new StreamWriter(networkStream);
+            await writer.WriteLineAsync(message);
+            writer.Flush();
+
+            return true;
+        }
     }
     public class AppTcpListener : IConnectionListener
     {

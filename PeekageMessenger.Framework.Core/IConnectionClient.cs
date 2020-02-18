@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace PeekageMessenger.Framework.Core
 {
@@ -9,5 +10,10 @@ namespace PeekageMessenger.Framework.Core
         NetworkStream GetStream();
 
         void Close();
+
+        Task<string> ReadMessageAsync();
+
+        Task<bool> WriteMessageAsync(string message);
+
     }
 }
